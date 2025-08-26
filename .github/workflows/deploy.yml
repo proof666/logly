@@ -1,6 +1,7 @@
 name: Deploy
 
 on:
+  # 🚀 Запуск только после попадания кода в main или вручную
   push:
     branches: [ main ]
   workflow_dispatch:
