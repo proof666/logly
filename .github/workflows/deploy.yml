@@ -3,6 +3,7 @@ name: Deploy
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -28,6 +31,8 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Add SPA fallback (404.html)
+        run: cp dist/index.html dist/404.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
