@@ -1,4 +1,4 @@
-# Habit Logger PWA
+# Habit Logger
 
 Minimal app for logging actions/habits with Google Auth (Firebase), Firestore, charts, and PWA.
 
