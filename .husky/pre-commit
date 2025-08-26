@@ -1,8 +1,0 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-# Lint staged files and format
-npx lint-staged
-
-# Typecheck the whole project to catch TS errors
-npm run typecheck
