@@ -9,13 +9,12 @@ const base = process.env.VITE_BASE ?? (isCI && repo ? `/${repo}/` : "/");
 console.log({ isCI, repo, base });
 
 export default defineConfig({
-    // base: base,
+    base,
     plugins: [
         react(),
         VitePWA({
             injectRegister: "auto",
             registerType: "autoUpdate",
-            includeAssets: ["favicon.svg", "robots.txt", "apple-touch-icon.png"],
             manifest: {
                 name: "Habit Logger",
                 short_name: "Habits",
