@@ -1,17 +1,25 @@
-import { AppBar, Box, Container, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack, Brightness4, Brightness7, Person } from "@mui/icons-material";
 import { Link, Outlet, useLocation, useMatches, useNavigate, type UIMatch } from "react-router-dom";
 import { useThemeSettings } from "../providers/theme";
 import { useAuth } from "../../shared/api/firebase/auth";
 import { useItems } from "../../shared/api/firebase/items";
 import { useMemo } from "react";
+import {
+    AppBar,
+    Box,
+    Container,
+    IconButton,
+    Toolbar,
+    Typography,
+    CircularProgress,
+} from "@mui/material";
 
 export function AppLayout() {
     const { mode, toggleMode } = useThemeSettings();
     const navigate = useNavigate();
     const location = useLocation();
     const matches = useMatches();
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const { items } = useItems(user?.id ?? null);
     const isRoot = location.pathname === "/";
     const current = matches[matches.length - 1] as UIMatch | undefined;
@@ -31,6 +39,21 @@ export function AppLayout() {
     }, [items, itemIdParam]);
     const pageTitle =
         itemTitle ?? (current?.handle as { title?: string } | undefined)?.title ?? "Logly";
+    if (loading) {
+        return (
+            <Box
+                sx={{
+                    minHeight: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+            >
+                <CircularProgress size={48} thickness={4} />
+            </Box>
+        );
+    }
+
     return (
         <Box sx={{ minHeight: "100%" }}>
             <AppBar position="static">
