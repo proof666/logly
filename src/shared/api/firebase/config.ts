@@ -6,14 +6,14 @@ import {
     persistentMultipleTabManager,
 } from "firebase/firestore";
 
-// These values should be provided via Vite env variables
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    apiKey: "AIzaSyDeq00uR3ys_Gr3gy8EjjEVHj9aHhbsjPY",
+    authDomain: "logly-app.firebaseapp.com",
+    projectId: "logly-app",
+    storageBucket: "logly-app.firebasestorage.app",
+    messagingSenderId: "290448416801",
+    appId: "1:290448416801:web:1da16ee95fbb2ab8794360",
+    measurementId: "G-8B52568ECT",
 };
 
 const app = initializeApp(firebaseConfig);
