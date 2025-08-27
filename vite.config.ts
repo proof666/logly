@@ -15,6 +15,14 @@ export default defineConfig({
         VitePWA({
             injectRegister: "auto",
             registerType: "autoUpdate",
+            includeAssets: [
+                "192.png",
+                "256.png",
+                "512.png",
+                "1024.png",
+                "favicon.png",
+                "robots.txt",
+            ],
             manifest: {
                 name: "Habit Logger",
                 short_name: "Habits",
