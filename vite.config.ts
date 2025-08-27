@@ -4,9 +4,12 @@ import { VitePWA } from "vite-plugin-pwa";
 
 const isCI = process.env.GITHUB_ACTIONS === "true";
 const repo = process.env.GITHUB_REPOSITORY?.split("/")[1];
+const base = process.env.VITE_BASE ?? (isCI && repo ? `/${repo}/` : "/");
+
+console.log({ isCI, repo, base });
 
 export default defineConfig({
-    base: process.env.VITE_BASE ?? (isCI && repo ? `/${repo}/` : "/"),
+    // base: base,
     plugins: [
         react(),
         VitePWA({
