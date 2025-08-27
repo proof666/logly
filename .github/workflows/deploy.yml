@@ -1,74 +1,68 @@
 name: Deploy
 
 on:
-  push:
-    branches: [ main ]
+    push:
+        branches: [main]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+    contents: read
+    pages: write
+    id-token: write
 
 concurrency:
-  group: 'pages'
-  cancel-in-progress: false
+    group: "pages"
+    cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "npm"
+            - name: Install dependencies
+              run: npm ci
+            - name: Build
+              run: npm run build
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: dist
 
-  deploy_firestore:
-    runs-on: ubuntu-latest
-    needs: build
-    if: ${{ !cancelled() }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - name: Install Firebase Tools
-        run: npm i -g firebase-tools
-      - name: Firebase Auth
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          if [ -z "$FIREBASE_TOKEN" ]; then
-            echo "FIREBASE_TOKEN is not set" && exit 1
-          fi
-          firebase use --add ${{ secrets.FIREBASE_PROJECT_ID }} --token "$FIREBASE_TOKEN"
-      - name: Deploy Firestore rules and indexes
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          firebase deploy --only firestore:rules,firestore:indexes --token "$FIREBASE_TOKEN"
+    deploy_firestore:
+        runs-on: ubuntu-latest
+        needs: build
+        if: ${{ !cancelled() }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-  deploy_pages:
-    runs-on: ubuntu-latest
-    needs: build
-    if: ${{ !cancelled() }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+            - name: Install Firebase Tools
+              run: npm i -g firebase-tools
+
+            - name: Setup Firebase credentials
+              run: |
+                  echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > ${HOME}/firebase-key.json
+                  echo "GOOGLE_APPLICATION_CREDENTIALS=${HOME}/firebase-key.json" >> $GITHUB_ENV
+
+            - name: Deploy Firestore rules and indexes
+              run: |
+                  firebase deploy \
+                    --only firestore:rules,firestore:indexes \
+                    --project ${{ secrets.FIREBASE_PROJECT_ID }}
+
+    deploy_pages:
+        runs-on: ubuntu-latest
+        needs: build
+        if: ${{ !cancelled() }}
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
