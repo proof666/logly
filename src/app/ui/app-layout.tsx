@@ -1,13 +1,13 @@
 import { AppBar, Box, Container, IconButton, Toolbar, Typography } from "@mui/material";
 import { ArrowBack, Brightness4, Brightness7, Person } from "@mui/icons-material";
 import { Link, Outlet, useLocation, useMatches, useNavigate, type UIMatch } from "react-router-dom";
-import { useThemeMode } from "../providers/theme";
+import { useThemeSettings } from "../providers/theme";
 import { useAuth } from "../../shared/api/firebase/auth";
 import { useItems } from "../../shared/api/firebase/items";
 import { useMemo } from "react";
 
 export function AppLayout() {
-    const { mode, toggle } = useThemeMode();
+    const { mode, toggleMode } = useThemeSettings();
     const navigate = useNavigate();
     const location = useLocation();
     const matches = useMatches();
@@ -59,7 +59,7 @@ export function AppLayout() {
                             </Typography>
                         </>
                     )}
-                    <IconButton color="inherit" onClick={toggle} aria-label="toggle theme">
+                    <IconButton color="inherit" onClick={toggleMode} aria-label="toggle theme">
                         {mode === "dark" ? <Brightness7 /> : <Brightness4 />}
                     </IconButton>
                     <IconButton color="inherit" component={Link} to="/profile" aria-label="profile">
