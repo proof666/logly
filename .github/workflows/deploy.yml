@@ -28,6 +28,8 @@ jobs:
               run: npm ci
             - name: Build
               run: npm run build
+              env:
+                  VITE_ROUTER_BASENAME: "/logly"
             - name: Upload artifact
               uses: actions/upload-pages-artifact@v3
               with:

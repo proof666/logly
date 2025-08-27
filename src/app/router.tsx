@@ -6,34 +6,40 @@ import { ProfilePage } from "../pages/profile/ProfilePage";
 import { AppLayout } from "./ui/app-layout";
 import { ItemEditPage } from "../pages/item-edit/ItemEditPage";
 
-const router = createBrowserRouter([
-    {
-        element: <AppLayout />,
-        children: [
-            { path: "/", element: <HomePage />, handle: { title: "Home" } },
-            {
-                path: "/item/:itemId",
-                element: <ItemLogsPage />,
-                handle: { title: "Item" },
-            },
-            {
-                path: "/item/:itemId/edit",
-                element: <ItemEditPage />,
-                handle: { title: "Edit item" },
-            },
-            {
-                path: "/item/:itemId/log/:logId",
-                element: <RecordPage />,
-                handle: { title: "Record" },
-            },
-            {
-                path: "/profile",
-                element: <ProfilePage />,
-                handle: { title: "Profile" },
-            },
-        ],
-    },
-]);
+const base = import.meta.env.VITE_ROUTER_BASENAME || "/";
+const basename = base.startsWith("/logly") ? "/logly" : undefined;
+
+const router = createBrowserRouter(
+    [
+        {
+            element: <AppLayout />,
+            children: [
+                { path: "/", element: <HomePage />, handle: { title: "Home" } },
+                {
+                    path: "/item/:itemId",
+                    element: <ItemLogsPage />,
+                    handle: { title: "Item" },
+                },
+                {
+                    path: "/item/:itemId/edit",
+                    element: <ItemEditPage />,
+                    handle: { title: "Edit item" },
+                },
+                {
+                    path: "/item/:itemId/log/:logId",
+                    element: <RecordPage />,
+                    handle: { title: "Record" },
+                },
+                {
+                    path: "/profile",
+                    element: <ProfilePage />,
+                    handle: { title: "Profile" },
+                },
+            ],
+        },
+    ],
+    basename ? { basename } : undefined,
+);
 
 export function AppRouter() {
     return <RouterProvider router={router} />;
