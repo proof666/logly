@@ -24,8 +24,8 @@ export default defineConfig({
                 "robots.txt",
             ],
             manifest: {
-                name: "Habit Logger",
-                short_name: "Habits",
+                name: "Logly - Habit Tracker",
+                short_name: "Logly",
                 description: "Track actions and habits, view stats and charts",
                 theme_color: "#C95E34",
                 background_color: "#C95E34",

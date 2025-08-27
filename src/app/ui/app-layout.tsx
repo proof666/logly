@@ -30,7 +30,7 @@ export function AppLayout() {
         return found?.title;
     }, [items, itemIdParam]);
     const pageTitle =
-        itemTitle ?? (current?.handle as { title?: string } | undefined)?.title ?? "Habit Logger";
+        itemTitle ?? (current?.handle as { title?: string } | undefined)?.title ?? "Logly";
     return (
         <Box sx={{ minHeight: "100%" }}>
             <AppBar position="static">
@@ -42,7 +42,7 @@ export function AppLayout() {
                             variant="h6"
                             sx={{ color: "inherit", textDecoration: "none", flexGrow: 1 }}
                         >
-                            Habit Logger
+                            Logly
                         </Typography>
                     ) : (
                         <>
