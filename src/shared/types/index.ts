@@ -16,6 +16,11 @@ export interface Item {
     description?: string;
     category?: string;
     icon?: string;
+    goal?: {
+        value: number;
+        direction: "atLeast" | "atMost"; // atLeast: aim to meet or exceed; atMost: aim not to exceed
+        period: "day" | "week" | "month";
+    };
     createdAt: number; // ms timestamp
     updatedAt: number; // ms timestamp
 }

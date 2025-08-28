@@ -12,8 +12,16 @@ export const PageHome = () => {
     const navigate = useNavigate();
 
     const handleAdd = useCallback(
-        async (data: { title: string; icon?: string }) => {
-            await addItem({ title: data.title, icon: data.icon });
+        async (data: {
+            title: string;
+            icon?: string;
+            goal?: {
+                value: number;
+                direction: "atLeast" | "atMost";
+                period: "day" | "week" | "month";
+            };
+        }) => {
+            await addItem({ title: data.title, icon: data.icon, goal: data.goal });
         },
         [addItem],
     );

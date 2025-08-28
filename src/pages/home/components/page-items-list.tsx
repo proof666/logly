@@ -23,6 +23,7 @@ import { Edit as EditIcon, Delete as DeleteIcon, MoreVert } from "@mui/icons-mat
 import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Item } from "../../../shared/types/index.js";
+import { formatGoal } from "../../../shared/utils/format-goal.js";
 
 export interface PageItemsListProps {
     items: Item[];
@@ -102,7 +103,28 @@ export const PageItemsList = (props: PageItemsListProps) => {
                                     ) : null}
                                     <ListItemText
                                         primary={item.title}
-                                        secondary={item.description}
+                                        secondary={
+                                            item.description || item.goal ? (
+                                                <>
+                                                    {item.description ? (
+                                                        <Typography
+                                                            color="text.secondary"
+                                                            variant="body2"
+                                                        >
+                                                            {item.description}
+                                                        </Typography>
+                                                    ) : null}
+                                                    {item.goal ? (
+                                                        <Typography
+                                                            color="text.secondary"
+                                                            variant="caption"
+                                                        >
+                                                            {formatGoal(item.goal)}
+                                                        </Typography>
+                                                    ) : null}
+                                                </>
+                                            ) : undefined
+                                        }
                                     />
                                 </ListItemButton>
                             </ListItem>

@@ -35,6 +35,7 @@ export function useItems(userId: UserId | null) {
                 description: d.get("description") ?? undefined,
                 category: d.get("category") ?? undefined,
                 icon: d.get("icon") ?? undefined,
+                goal: d.get("goal") ?? undefined,
                 createdAt: (d.get("createdAt") as Timestamp)?.toMillis?.() ?? Date.now(),
                 updatedAt: (d.get("updatedAt") as Timestamp)?.toMillis?.() ?? Date.now(),
             }));
@@ -45,7 +46,17 @@ export function useItems(userId: UserId | null) {
     }, [userId]);
 
     const addItem = useCallback(
-        async (data: { title: string; description?: string; category?: string; icon?: string }) => {
+        async (data: {
+            title: string;
+            description?: string;
+            category?: string;
+            icon?: string;
+            goal?: {
+                value: number;
+                direction: "atLeast" | "atMost";
+                period: "day" | "week" | "month";
+            };
+        }) => {
             if (!userId) throw new Error("Not authenticated");
             await addDoc(itemsCol(userId), {
                 userId,
@@ -53,6 +64,7 @@ export function useItems(userId: UserId | null) {
                 description: data.description ?? null,
                 category: data.category ?? null,
                 icon: data.icon ?? null,
+                goal: data.goal ?? null,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
             });
@@ -63,7 +75,11 @@ export function useItems(userId: UserId | null) {
     const updateItem = useCallback(
         async (
             id: ItemId,
-            patch: Partial<Pick<Item, "title" | "description" | "category" | "icon">>,
+            patch: Partial<
+                Pick<Item, "title" | "description" | "category" | "icon"> & {
+                    goal: Item["goal"] | null;
+                }
+            >,
         ) => {
             if (!userId) throw new Error("Not authenticated");
             await updateDoc(doc(itemsCol(userId), id), {

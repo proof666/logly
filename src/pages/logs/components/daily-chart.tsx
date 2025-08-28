@@ -1,12 +1,21 @@
 import { Card, CardContent } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
-
+import {
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Tooltip,
+    ReferenceLine,
+} from "recharts";
 type Props = {
     data: Array<{ date: string; count: number }>;
+    goalLine?: number;
 };
 
-export function DailyChart({ data }: Props) {
+export function DailyChart({ data, goalLine }: Props) {
     const theme = useTheme();
     return (
         <Card>
@@ -28,6 +37,19 @@ export function DailyChart({ data }: Props) {
                             itemStyle={{ color: theme.palette.text.primary }}
                             labelStyle={{ color: theme.palette.text.secondary }}
                         />
+                        {typeof goalLine === "number" ? (
+                            <ReferenceLine
+                                y={goalLine}
+                                stroke={theme.palette.text.secondary}
+                                strokeDasharray="8 8"
+                                label={{
+                                    value: "Goal",
+                                    position: "top",
+                                    fill: theme.palette.text.secondary,
+                                    fontSize: 16,
+                                }}
+                            />
+                        ) : null}
                         <Bar
                             dataKey="count"
                             fill={theme.palette.primary.main}

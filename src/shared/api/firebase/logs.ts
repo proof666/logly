@@ -130,3 +130,38 @@ export function aggregateLogsByDay(logs: LogRecord[]): Array<{ date: string; cou
         })
         .map(([date, count]) => ({ date, count }));
 }
+
+function pad(n: number) {
+    return n < 10 ? `0${n}` : `${n}`;
+}
+
+export function aggregateLogsByUnit(
+    logs: LogRecord[],
+    unit: "day" | "week" | "month",
+): Array<{ date: string; count: number }> {
+    if (unit === "day") return aggregateLogsByDay(logs);
+
+    const map = new Map<string, number>();
+    for (const l of logs) {
+        const d = new Date(l.actionDate);
+        if (unit === "week") {
+            // Monday-based week start
+            const day = d.getDay(); // 0..6 (Sun..Sat)
+            const diffToMonday = (day + 6) % 7; // 0 for Mon, 6 for Sun
+            const weekStart = new Date(d);
+            weekStart.setHours(0, 0, 0, 0);
+            weekStart.setDate(d.getDate() - diffToMonday);
+            const key = `${weekStart.getFullYear()}-${pad(weekStart.getMonth() + 1)}-${pad(
+                weekStart.getDate(),
+            )}`; // YYYY-MM-DD (week start)
+            map.set(key, (map.get(key) ?? 0) + 1);
+        } else {
+            // month
+            const key = `${d.getFullYear()}-${pad(d.getMonth() + 1)}`; // YYYY-MM
+            map.set(key, (map.get(key) ?? 0) + 1);
+        }
+    }
+    return Array.from(map.entries())
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([date, count]) => ({ date, count }));
+}
