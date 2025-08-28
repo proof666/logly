@@ -1,4 +1,13 @@
-import { Card, CardActions, CardContent, Button, Stack, TextField } from "@mui/material";
+import {
+    Card,
+    CardActions,
+    CardContent,
+    Button,
+    Stack,
+    TextField,
+    DialogActions,
+    DialogContent,
+} from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
@@ -46,5 +55,45 @@ export function AddLogCard({ date, setDate, comment, setComment, onSubmit }: Pro
                 </Button>
             </CardActions>
         </Card>
+    );
+}
+
+export function AddLogForm({ date, setDate, comment, setComment, onSubmit }: Props) {
+    const handleAdd = (e?: React.FormEvent<HTMLFormElement>) => {
+        e?.preventDefault();
+        const now = dayjs();
+        const base = date ?? now;
+        const ts = base
+            .hour(now.hour())
+            .minute(now.minute())
+            .second(now.second())
+            .millisecond(now.millisecond())
+            .valueOf();
+        onSubmit(ts, comment.trim());
+    };
+
+    return (
+        <form onSubmit={handleAdd} noValidate>
+            <DialogContent>
+                <Stack
+                    direction={{ xs: "column", sm: "row" }}
+                    spacing={1.5}
+                    alignItems={{ xs: "stretch", sm: "center" }}
+                >
+                    <DatePicker label="Date" value={date} onChange={(v) => setDate(v)} />
+                    <TextField
+                        fullWidth
+                        label="Comment"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                    />
+                </Stack>
+            </DialogContent>
+            <DialogActions>
+                <Button type="submit" variant="contained">
+                    Log
+                </Button>
+            </DialogActions>
+        </form>
     );
 }
