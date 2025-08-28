@@ -1,8 +1,5 @@
 import {
-    Avatar,
     Button,
-    Card,
-    CardContent,
     Dialog,
     DialogActions,
     DialogContent,
@@ -11,7 +8,6 @@ import {
     IconButton,
     List,
     ListItem,
-    ListItemAvatar,
     ListItemButton,
     ListItemIcon,
     ListItemText,
@@ -73,99 +69,87 @@ export const PageItemsList = (props: PageItemsListProps) => {
     }, []);
 
     return (
-        <Card>
-            <CardContent>
-                {items.length === 0 ? (
-                    <Typography color="text.secondary">No items yet</Typography>
-                ) : (
-                    <List>
-                        {items.map((item, index) => (
-                            <ListItem
-                                key={item.id}
-                                divider={index < items.length - 1}
-                                secondaryAction={
-                                    <IconButton
-                                        edge="end"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            getOpenMenu(item.id)(e);
-                                        }}
-                                    >
-                                        <MoreVert />
-                                    </IconButton>
-                                }
-                            >
-                                <ListItemButton onClick={() => navigate(`/item/${item.id}`)}>
-                                    {item.icon ? (
-                                        <ListItemAvatar>
-                                            <Avatar>{item.icon}</Avatar>
-                                        </ListItemAvatar>
-                                    ) : null}
-                                    <ListItemText
-                                        primary={item.title}
-                                        secondary={
-                                            item.description || item.goal ? (
-                                                <>
-                                                    {item.description ? (
-                                                        <Typography
-                                                            color="text.secondary"
-                                                            variant="body2"
-                                                        >
-                                                            {item.description}
-                                                        </Typography>
-                                                    ) : null}
-                                                    {item.goal ? (
-                                                        <Typography
-                                                            color="text.secondary"
-                                                            variant="caption"
-                                                        >
-                                                            {formatGoal(item.goal)}
-                                                        </Typography>
-                                                    ) : null}
-                                                </>
-                                            ) : undefined
-                                        }
-                                    />
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                )}
-                <Menu
-                    anchorEl={anchorEl}
-                    open={open}
-                    onClose={closeMenu}
-                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                >
-                    <MenuItem onClick={handleEditClick}>
-                        <ListItemIcon>
-                            <EditIcon fontSize="small" />
-                        </ListItemIcon>
-                        Edit
-                    </MenuItem>
-                    <MenuItem onClick={handleDeleteClick}>
-                        <ListItemIcon>
-                            <DeleteIcon fontSize="small" color="error" />
-                        </ListItemIcon>
-                        Delete
-                    </MenuItem>
-                </Menu>
+        <>
+            {items.length === 0 ? (
+                <Typography color="text.secondary">No items yet</Typography>
+            ) : (
+                <List>
+                    {items.map((item) => (
+                        <ListItem
+                            key={item.id}
+                            disablePadding
+                            secondaryAction={
+                                <IconButton
+                                    edge="end"
+                                    onClick={(e) => {
+                                        getOpenMenu(item.id)(e);
+                                    }}
+                                >
+                                    <MoreVert />
+                                </IconButton>
+                            }
+                        >
+                            <ListItemButton onClick={() => navigate(`/item/${item.id}`)}>
+                                <ListItemText
+                                    primary={item.icon ? `${item.icon} ${item.title}` : item.title}
+                                    secondary={
+                                        <>
+                                            {item.description ? (
+                                                <Typography color="text.secondary" variant="body2">
+                                                    {item.description}
+                                                </Typography>
+                                            ) : null}
+                                            {item.goal ? (
+                                                <Typography
+                                                    color="text.secondary"
+                                                    variant="caption"
+                                                >
+                                                    {formatGoal(item.goal)}
+                                                </Typography>
+                                            ) : null}
+                                        </>
+                                    }
+                                />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                </List>
+            )}
 
-                <Dialog open={confirmOpen} onClose={handleCancelDelete} maxWidth="xs" fullWidth>
-                    <DialogTitle>Delete item?</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            This action cannot be undone. Are you sure you want to delete this item?
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={handleCancelDelete}>Cancel</Button>
-                        <Button onClick={handleConfirmDelete} color="error" variant="contained">
-                            Delete
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-            </CardContent>
-        </Card>
+            <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={closeMenu}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            >
+                <MenuItem onClick={handleEditClick}>
+                    <ListItemIcon>
+                        <EditIcon fontSize="small" />
+                    </ListItemIcon>
+                    Edit
+                </MenuItem>
+                <MenuItem onClick={handleDeleteClick}>
+                    <ListItemIcon>
+                        <DeleteIcon fontSize="small" color="error" />
+                    </ListItemIcon>
+                    Delete
+                </MenuItem>
+            </Menu>
+
+            <Dialog open={confirmOpen} onClose={handleCancelDelete} maxWidth="xs" fullWidth>
+                <DialogTitle>Delete item?</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        This action cannot be undone. Are you sure you want to delete this item?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancelDelete}>Cancel</Button>
+                    <Button onClick={handleConfirmDelete} color="error" variant="contained">
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };
