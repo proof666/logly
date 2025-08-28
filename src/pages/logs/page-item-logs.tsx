@@ -63,11 +63,12 @@ export const PageItemLogs = () => {
 
     return (
         <Stack spacing={2} mt={2}>
+            {/* Top toolbar: filters + actions; vertical on mobile */}
             <Stack
-                direction={{ xs: "column-reverse", sm: "row" }}
+                direction={{ xs: "column", md: "row" }}
                 justifyContent="space-between"
-                alignItems="center"
-                gap={2}
+                alignItems={{ xs: "stretch", md: "center" }}
+                spacing={{ xs: 1.5, md: 0 }}
             >
                 <DateFilters
                     from={from}
@@ -77,19 +78,18 @@ export const PageItemLogs = () => {
                     onChangeTo={(v: Dayjs | null) => v && setTo(v.endOf("day"))}
                     onToggleShowAll={() => setShowAll((v) => !v)}
                 />
-                <ButtonGroup>
+                <ButtonGroup sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Button
                         variant="contained"
                         startIcon={<Add />}
-                        onClick={() => {
-                            setDesktopDialogOpen(true);
-                        }}
+                        onClick={() => setDesktopDialogOpen(true)}
+                        sx={{ flex: { xs: 1, md: "initial" } }}
                     >
                         Log
                     </Button>
                     <Button
                         startIcon={<Bolt />}
-                        variant="contained"
+                        variant="outlined"
                         onClick={() => {
                             const now = dayjs();
                             const base = date ?? now;
@@ -101,6 +101,7 @@ export const PageItemLogs = () => {
                                 .valueOf();
                             addDetailedLog({ actionDate: ts });
                         }}
+                        sx={{ flex: { xs: 1, md: "initial" } }}
                     >
                         Quick Log
                     </Button>
@@ -110,7 +111,7 @@ export const PageItemLogs = () => {
             <Stack
                 direction={{ xs: "column", sm: "row" }}
                 justifyContent="space-between"
-                alignItems="center"
+                alignItems={{ xs: "stretch", sm: "center" }}
                 gap={2}
                 sx={{ px: { xs: 0.5, sm: 0 } }}
             >
@@ -128,7 +129,11 @@ export const PageItemLogs = () => {
                         <ToggleButton value="month">Months</ToggleButton>
                     </ToggleButtonGroup>
                 </Stack>
-                <Stack direction="row" spacing={2} alignItems="center">
+                <Stack
+                    direction={{ xs: "column", sm: "row" }}
+                    spacing={2}
+                    alignItems={{ xs: "flex-start", sm: "center" }}
+                >
                     {item?.goal ? (
                         <Typography variant="body2" color="text.secondary">
                             Goal: {formatGoal(item.goal)}

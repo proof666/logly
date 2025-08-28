@@ -80,7 +80,12 @@ export function AddLogForm({ date, setDate, comment, setComment, onSubmit }: Pro
                     spacing={1.5}
                     alignItems={{ xs: "stretch", sm: "center" }}
                 >
-                    <DatePicker label="Date" value={date} onChange={(v) => setDate(v)} />
+                    <DatePicker
+                        label="Date"
+                        value={date}
+                        onChange={(v) => setDate(v)}
+                        slotProps={{ textField: { fullWidth: true } }}
+                    />
                     <TextField
                         fullWidth
                         label="Comment"

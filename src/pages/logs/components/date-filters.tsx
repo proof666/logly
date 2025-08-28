@@ -20,13 +20,29 @@ export function DateFilters({
     onToggleShowAll,
 }: Props) {
     return (
-        <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
-            <DatePicker label="From" value={from} onChange={onChangeFrom} disabled={showAll} />
-            <DatePicker label="To" value={to} onChange={onChangeTo} disabled={showAll} />
+        <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            alignItems={{ xs: "stretch", sm: "center" }}
+        >
+            <DatePicker
+                label="From"
+                value={from}
+                onChange={onChangeFrom}
+                disabled={showAll}
+                slotProps={{ textField: { fullWidth: true } }}
+            />
+            <DatePicker
+                label="To"
+                value={to}
+                onChange={onChangeTo}
+                disabled={showAll}
+                slotProps={{ textField: { fullWidth: true } }}
+            />
             <Button
                 variant={showAll ? "contained" : "outlined"}
                 onClick={onToggleShowAll}
-                sx={{ whiteSpace: "nowrap" }}
+                sx={{ whiteSpace: "nowrap", width: { xs: "100%", sm: "200px" } }}
             >
                 {showAll ? "Showing all" : "Show all"}
             </Button>
