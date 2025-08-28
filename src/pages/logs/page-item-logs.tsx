@@ -11,6 +11,7 @@ import {
     DialogTitle,
     Button,
     ButtonGroup,
+    Alert,
 } from "@mui/material";
 import { Add, Bolt, Close } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
@@ -63,12 +64,11 @@ export const PageItemLogs = () => {
 
     return (
         <Stack spacing={2} mt={2}>
-            {/* Top toolbar: filters + actions; vertical on mobile */}
             <Stack
                 direction={{ xs: "column", md: "row" }}
                 justifyContent="space-between"
                 alignItems={{ xs: "stretch", md: "center" }}
-                spacing={{ xs: 1.5, md: 0 }}
+                spacing={2}
             >
                 <DateFilters
                     from={from}
@@ -101,7 +101,7 @@ export const PageItemLogs = () => {
                                 .valueOf();
                             addDetailedLog({ actionDate: ts });
                         }}
-                        sx={{ flex: { xs: 1, md: "initial" } }}
+                        sx={{ whiteSpace: "nowrap", flex: { xs: 1, md: "initial" } }}
                     >
                         Quick Log
                     </Button>
@@ -115,6 +115,22 @@ export const PageItemLogs = () => {
                 gap={2}
                 sx={{ px: { xs: 0.5, sm: 0 } }}
             >
+                <Stack
+                    direction={{ xs: "column", sm: "row" }}
+                    spacing={2}
+                    alignItems={{ xs: "flex-start", sm: "center" }}
+                >
+                    {item?.goal ? (
+                        <Alert severity="info">
+                            <Typography variant="body2" color="text.secondary">
+                                Goal: {formatGoal(item.goal)}
+                            </Typography>
+                        </Alert>
+                    ) : null}
+                    <Typography variant="body2" color="text.secondary">
+                        {stats.count} records • Last: {stats.lastText}
+                    </Typography>
+                </Stack>
                 <Stack direction="row" spacing={1} alignItems="center">
                     <Typography variant="body2">View:</Typography>
                     <ToggleButtonGroup
@@ -128,20 +144,6 @@ export const PageItemLogs = () => {
                         <ToggleButton value="week">Weeks</ToggleButton>
                         <ToggleButton value="month">Months</ToggleButton>
                     </ToggleButtonGroup>
-                </Stack>
-                <Stack
-                    direction={{ xs: "column", sm: "row" }}
-                    spacing={2}
-                    alignItems={{ xs: "flex-start", sm: "center" }}
-                >
-                    {item?.goal ? (
-                        <Typography variant="body2" color="text.secondary">
-                            Goal: {formatGoal(item.goal)}
-                        </Typography>
-                    ) : null}
-                    <Typography variant="body2" color="text.secondary">
-                        {stats.count} records • Last: {stats.lastText}
-                    </Typography>
                 </Stack>
             </Stack>
 

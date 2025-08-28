@@ -1,4 +1,4 @@
-import { Stack, Button } from "@mui/material";
+import { Stack, Button, useMediaQuery, useTheme } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import type { Dayjs } from "dayjs";
 
@@ -19,30 +19,33 @@ export function DateFilters({
     onChangeTo,
     onToggleShowAll,
 }: Props) {
+    const theme = useTheme();
+    const isBelowMd = useMediaQuery(theme.breakpoints.down("md")); // < 900px
     return (
         <Stack
             direction={{ xs: "column", sm: "row" }}
             spacing={2}
             alignItems={{ xs: "stretch", sm: "center" }}
+            justifyItems={{ xs: "stretch" }}
         >
             <DatePicker
                 label="From"
                 value={from}
                 onChange={onChangeFrom}
                 disabled={showAll}
-                slotProps={{ textField: { fullWidth: true } }}
+                slotProps={{ textField: { fullWidth: isBelowMd } }}
             />
             <DatePicker
                 label="To"
                 value={to}
                 onChange={onChangeTo}
                 disabled={showAll}
-                slotProps={{ textField: { fullWidth: true } }}
+                slotProps={{ textField: { fullWidth: isBelowMd } }}
             />
             <Button
                 variant={showAll ? "contained" : "outlined"}
                 onClick={onToggleShowAll}
-                sx={{ whiteSpace: "nowrap", width: { xs: "100%", sm: "200px" } }}
+                sx={{ whiteSpace: "nowrap", minWidth: { xs: "100%", sm: "100px" } }}
             >
                 {showAll ? "Showing all" : "Show all"}
             </Button>
