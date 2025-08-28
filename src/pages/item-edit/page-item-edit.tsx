@@ -4,7 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../shared/api/firebase/auth";
 import { useItems } from "../../shared/api/firebase/items";
 
-export function ItemEditPage() {
+export function PageItemEdit() {
     const { itemId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();

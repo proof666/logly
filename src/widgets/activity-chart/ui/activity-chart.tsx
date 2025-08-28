@@ -1,7 +1,12 @@
 import { Card, CardContent, Typography } from "@mui/material";
+import { FC } from "react";
 import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
 
-export function ActivityChart({ data }: { data: Array<{ date: string; count: number }> }) {
+interface ActivityChartProps {
+    data: Array<{ date: string; count: number }>;
+}
+
+export const ActivityChart: FC<ActivityChartProps> = ({ data }) => {
     return (
         <Card>
             <CardContent>
@@ -18,4 +23,4 @@ export function ActivityChart({ data }: { data: Array<{ date: string; count: num
             </CardContent>
         </Card>
     );
-}
+};

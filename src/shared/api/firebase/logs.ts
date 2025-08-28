@@ -22,10 +22,10 @@ const logsCol = (userId: UserId, itemId: ItemId) =>
 export function useLogs(
     userId: UserId | null,
     itemId: ItemId | null,
-    options?: { since?: number },
+    options?: { from?: number; to?: number },
 ) {
     const [logs, setLogs] = useState<LogRecord[]>([]);
-    const [loading, setLoading] = useState<boolean>(!!(userId && itemId));
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         if (!userId || !itemId) {
@@ -33,9 +33,13 @@ export function useLogs(
             setLoading(false);
             return;
         }
+        setLoading(true);
         const constraints: QueryConstraint[] = [];
-        if (options?.since) {
-            constraints.push(where("actionDate", ">=", Timestamp.fromMillis(options.since)));
+        if (options?.from) {
+            constraints.push(where("actionDate", ">=", Timestamp.fromMillis(options.from)));
+        }
+        if (options?.to) {
+            constraints.push(where("actionDate", "<=", Timestamp.fromMillis(options.to)));
         }
         constraints.push(orderBy("actionDate", "desc"));
         const q = query(logsCol(userId, itemId), ...constraints);
@@ -53,7 +57,7 @@ export function useLogs(
             setLoading(false);
         });
         return () => unsub();
-    }, [userId, itemId, options?.since]);
+    }, [userId, itemId, options?.from, options?.to]);
 
     const addQuickLog = useCallback(async () => {
         if (!userId || !itemId) throw new Error("Not ready");

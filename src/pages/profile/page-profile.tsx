@@ -1,8 +1,8 @@
 import { Avatar, Button, Stack, Switch, Typography, Box, IconButton } from "@mui/material";
 import { useAuth } from "../../shared/api/firebase/auth";
-import { useThemeSettings } from "../../app/providers/theme";
+import { useThemeSettings } from "../../app/providers/theme-provider";
 
-export function ProfilePage() {
+export const PageProfile = () => {
     const { user, signOut, signInWithGoogle } = useAuth();
     const { mode, toggleMode, color, setColor, preset } = useThemeSettings();
     if (!user) {
@@ -51,4 +51,4 @@ export function ProfilePage() {
             </Button>
         </Stack>
     );
-}
+};

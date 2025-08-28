@@ -1,6 +1,6 @@
 import { ArrowBack, Brightness4, Brightness7, Person } from "@mui/icons-material";
 import { Link, Outlet, useLocation, useMatches, useNavigate, type UIMatch } from "react-router-dom";
-import { useThemeSettings } from "../providers/theme";
+import { useThemeSettings } from "../providers/theme-provider";
 import { useAuth } from "../../shared/api/firebase/auth";
 import { useItems } from "../../shared/api/firebase/items";
 import { useMemo } from "react";
@@ -14,7 +14,7 @@ import {
     CircularProgress,
 } from "@mui/material";
 
-export function AppLayout() {
+export const AppLayout = () => {
     const { mode, toggleMode } = useThemeSettings();
     const navigate = useNavigate();
     const location = useLocation();
@@ -95,4 +95,4 @@ export function AppLayout() {
             </Container>
         </Box>
     );
-}
+};

@@ -7,7 +7,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 
-export function RecordPage() {
+export const PageRecord = () => {
     const { itemId, logId } = useParams();
     const navigate = useNavigate();
     const { user } = useAuth();
@@ -71,4 +71,4 @@ export function RecordPage() {
             </CardContent>
         </Card>
     );
-}
+};
