@@ -60,6 +60,20 @@ export function ThemeModeProvider({ children }: PropsWithChildren) {
             }),
         [mode, color],
     );
+    // Keep the browser UI theme color in sync with the selected theme & color
+    useEffect(() => {
+        const themeColor =
+            theme.palette.mode === "dark"
+                ? theme.palette.background.default
+                : theme.palette.primary.main;
+        let meta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+        if (!meta) {
+            meta = document.createElement("meta");
+            meta.setAttribute("name", "theme-color");
+            document.head.appendChild(meta);
+        }
+        meta.setAttribute("content", themeColor);
+    }, [theme.palette.mode, theme.palette.primary.main, theme.palette.background.default]);
     const value = useMemo(
         () => ({
             mode,
