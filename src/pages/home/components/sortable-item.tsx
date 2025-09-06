@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon, MoreVert } from "@mui/icons-material";
 import { useState, useCallback } from "react";
-import { useTheme } from "@mui/material/styles";
+import { useTheme, useMediaQuery } from "@mui/material";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { formatGoal } from "../../../shared/utils/format-goal.js";
@@ -26,6 +26,7 @@ import type { SortableItemProps } from "./types.js";
 
 export const SortableItem = ({ item, onEdit, onDelete, onClick, stats }: SortableItemProps) => {
     const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: item.id,
     });
@@ -113,10 +114,39 @@ export const SortableItem = ({ item, onEdit, onDelete, onClick, stats }: Sortabl
                                         No goal
                                     </Typography>
                                 )}
+                                {stats && stats.length > 0 && isMobile && (
+                                    <Box
+                                        sx={{
+                                            mt: 1,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 1,
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="body2"
+                                            color="primary.main"
+                                            sx={{ fontWeight: 600, minWidth: 24 }}
+                                        >
+                                            {stats.reduce((sum, count) => sum + count, 0)}
+                                        </Typography>
+                                        <Box sx={{ flex: 1 }}>
+                                            <SparkLineChart
+                                                data={stats}
+                                                height={24}
+                                                curve="natural"
+                                                color={theme.palette.primary.main}
+                                                showTooltip={false}
+                                                showHighlight={false}
+                                                disableClipping
+                                            />
+                                        </Box>
+                                    </Box>
+                                )}
                             </>
                         }
                     />
-                    {stats && stats.length > 0 && (
+                    {stats && stats.length > 0 && !isMobile && (
                         <Box sx={{ ml: 2, display: "flex", alignItems: "center", gap: 1, mr: 4 }}>
                             <Typography
                                 variant="body1"
