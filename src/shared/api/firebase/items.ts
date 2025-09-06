@@ -26,7 +26,7 @@ export function useItems(userId: UserId | null) {
             setLoading(false);
             return;
         }
-        const q = query(itemsCol(userId), orderBy("createdAt", "desc"));
+        const q = query(itemsCol(userId), orderBy("position", "asc"));
         const unsub = onSnapshot(q, (snap) => {
             const res: Item[] = snap.docs.map((d) => ({
                 id: d.id,
@@ -36,6 +36,10 @@ export function useItems(userId: UserId | null) {
                 category: d.get("category") ?? undefined,
                 icon: d.get("icon") ?? undefined,
                 goal: d.get("goal") ?? undefined,
+                position:
+                    d.get("position") ??
+                    (d.get("createdAt") as Timestamp)?.toMillis?.() ??
+                    Date.now(),
                 createdAt: (d.get("createdAt") as Timestamp)?.toMillis?.() ?? Date.now(),
                 updatedAt: (d.get("updatedAt") as Timestamp)?.toMillis?.() ?? Date.now(),
             }));
@@ -58,6 +62,9 @@ export function useItems(userId: UserId | null) {
             };
         }) => {
             if (!userId) throw new Error("Not authenticated");
+            const maxPosition =
+                items.length > 0 ? Math.max(...items.map((item) => item.position)) : 0;
+            const newPosition = maxPosition + 1;
             await addDoc(itemsCol(userId), {
                 userId,
                 title: data.title,
@@ -65,18 +72,19 @@ export function useItems(userId: UserId | null) {
                 category: data.category ?? null,
                 icon: data.icon ?? null,
                 goal: data.goal ?? null,
+                position: newPosition,
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp(),
             });
         },
-        [userId],
+        [userId, items],
     );
 
     const updateItem = useCallback(
         async (
             id: ItemId,
             patch: Partial<
-                Pick<Item, "title" | "description" | "category" | "icon"> & {
+                Pick<Item, "title" | "description" | "category" | "icon" | "position"> & {
                     goal: Item["goal"] | null;
                 }
             >,
@@ -98,5 +106,38 @@ export function useItems(userId: UserId | null) {
         [userId],
     );
 
-    return { items, loading, addItem, updateItem, removeItem };
+    const updateItemPosition = useCallback(
+        async (id: ItemId, position: number) => {
+            if (!userId) throw new Error("Not authenticated");
+            await updateDoc(doc(itemsCol(userId), id), {
+                position,
+                updatedAt: serverTimestamp(),
+            });
+        },
+        [userId],
+    );
+
+    const updateItemsPositions = useCallback(
+        async (reorderedItems: Item[]) => {
+            if (!userId) throw new Error("Not authenticated");
+            const batch = reorderedItems.map((item, index) =>
+                updateDoc(doc(itemsCol(userId), item.id), {
+                    position: index,
+                    updatedAt: serverTimestamp(),
+                }),
+            );
+            await Promise.all(batch);
+        },
+        [userId],
+    );
+
+    return {
+        items,
+        loading,
+        addItem,
+        updateItem,
+        removeItem,
+        updateItemPosition,
+        updateItemsPositions,
+    };
 }

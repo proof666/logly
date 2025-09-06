@@ -21,6 +21,7 @@ export interface Item {
         direction: "atLeast" | "atMost"; // atLeast: aim to meet or exceed; atMost: aim not to exceed
         period: "day" | "week" | "month";
     };
+    position: number; // for custom ordering
     createdAt: number; // ms timestamp
     updatedAt: number; // ms timestamp
 }

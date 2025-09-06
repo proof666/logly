@@ -16,11 +16,18 @@ import { useItems } from "../../shared/api/firebase/items.js";
 import { useNavigate } from "react-router-dom";
 import { PageAddItemForm } from "./components/page-add-item-card.js";
 import { PageItemsList } from "./components/page-items-list.js";
+import type { Item } from "../../shared/types/index.js";
 import React from "react";
 
 export const PageHome = () => {
-    const { user, signInWithGoogle } = useAuth();
-    const { items, addItem, removeItem } = useItems(user?.id ?? null);
+    const { user, signInWithGoogle, loading: authLoading } = useAuth();
+    const {
+        items,
+        addItem,
+        removeItem,
+        updateItemsPositions,
+        loading: itemsLoading,
+    } = useItems(user?.id ?? null);
     const navigate = useNavigate();
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [desktopDialogOpen, setDesktopDialogOpen] = useState(false);
@@ -43,6 +50,23 @@ export const PageHome = () => {
     const handleEdit = useCallback((id: string) => navigate(`/item/${id}/edit`), [navigate]);
 
     const handleDelete = useCallback((id: string) => void removeItem(id), [removeItem]);
+
+    const handleReorder = useCallback(
+        async (reorderedItems: Item[]) => {
+            await updateItemsPositions(reorderedItems);
+        },
+        [updateItemsPositions],
+    );
+
+    const handleUpdatePositions = useCallback(async () => {
+        if (!user?.id) return;
+        // This will update all items with proper positions
+        const updatedItems = items.map((item, index) => ({
+            ...item,
+            position: index,
+        }));
+        await updateItemsPositions(updatedItems);
+    }, [user?.id, items, updateItemsPositions]);
 
     const handleOpenDrawer = useCallback(() => setDrawerOpen(true), []);
     const handleCloseDrawer = useCallback(() => setDrawerOpen(false), []);
@@ -101,6 +125,9 @@ export const PageHome = () => {
                 mt={2}
                 sx={{ display: { xs: "none", md: "flex" } }}
             >
+                <Button variant="outlined" onClick={handleUpdatePositions} sx={{ mr: 1 }}>
+                    Update Positions
+                </Button>
                 <Button variant="contained" startIcon={<Add />} onClick={handleOpenDesktopDialog}>
                     Add habit
                 </Button>
@@ -108,7 +135,17 @@ export const PageHome = () => {
 
             {/* Items list - always visible */}
             <Stack spacing={3} mt={{ xs: 0, md: 2 }}>
-                <PageItemsList items={items} onEdit={handleEdit} onDelete={handleDelete} />
+                {authLoading || itemsLoading ? (
+                    <Typography color="text.secondary">Loading...</Typography>
+                ) : (
+                    <PageItemsList
+                        items={items}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onReorder={handleReorder}
+                        loading={itemsLoading}
+                    />
+                )}
             </Stack>
 
             {/* Mobile FAB */}
