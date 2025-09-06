@@ -186,8 +186,8 @@ export const PageItemLogs = () => {
                 onClick={() => setDrawerOpen(true)}
                 sx={{
                     position: "fixed",
-                    right: 16,
-                    bottom: 16,
+                    right: 24,
+                    bottom: 24,
                     display: { xs: "flex", md: "none" },
                 }}
             >
