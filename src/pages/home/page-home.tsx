@@ -58,16 +58,6 @@ export const PageHome = () => {
         [updateItemsPositions],
     );
 
-    const handleUpdatePositions = useCallback(async () => {
-        if (!user?.id) return;
-        // This will update all items with proper positions
-        const updatedItems = items.map((item, index) => ({
-            ...item,
-            position: index,
-        }));
-        await updateItemsPositions(updatedItems);
-    }, [user?.id, items, updateItemsPositions]);
-
     const handleOpenDrawer = useCallback(() => setDrawerOpen(true), []);
     const handleCloseDrawer = useCallback(() => setDrawerOpen(false), []);
     const handleOpenDesktopDialog = useCallback(() => setDesktopDialogOpen(true), []);
@@ -125,9 +115,6 @@ export const PageHome = () => {
                 mt={2}
                 sx={{ display: { xs: "none", md: "flex" } }}
             >
-                <Button variant="outlined" onClick={handleUpdatePositions} sx={{ mr: 1 }}>
-                    Update Positions
-                </Button>
                 <Button variant="contained" startIcon={<Add />} onClick={handleOpenDesktopDialog}>
                     Add habit
                 </Button>
