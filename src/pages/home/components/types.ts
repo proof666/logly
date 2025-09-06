@@ -5,6 +5,7 @@ export interface PageItemsListProps {
     onEdit: (id: string) => void;
     onDelete: (id: string) => void;
     onReorder: (items: Item[]) => void;
+    onQuickLog?: (itemId: string) => void;
     loading?: boolean;
     userId?: UserId | null;
 }
@@ -14,5 +15,6 @@ export interface SortableItemProps {
     onEdit: (id: string) => void;
     onDelete: (id: string) => void;
     onClick: () => void;
+    onQuickLog?: (itemId: string) => void;
     stats?: number[];
 }

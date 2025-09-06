@@ -13,6 +13,7 @@ import { Add, Close } from "@mui/icons-material";
 import { useCallback, useState } from "react";
 import { useAuth } from "../../shared/api/firebase/auth.js";
 import { useItems } from "../../shared/api/firebase/items.js";
+import { addQuickLogForItem } from "../../shared/api/firebase/logs.js";
 import { useNavigate } from "react-router-dom";
 import { PageAddItemForm } from "./components/page-add-item-card.js";
 import { PageItemsList } from "./components/page-items-list.js";
@@ -56,6 +57,14 @@ export const PageHome = () => {
             await updateItemsPositions(reorderedItems);
         },
         [updateItemsPositions],
+    );
+
+    const handleQuickLog = useCallback(
+        async (itemId: string) => {
+            if (!user?.id) return;
+            await addQuickLogForItem(user.id, itemId);
+        },
+        [user?.id],
     );
 
     const handleOpenDrawer = useCallback(() => setDrawerOpen(true), []);
@@ -130,6 +139,7 @@ export const PageHome = () => {
                         onEdit={handleEdit}
                         onDelete={handleDelete}
                         onReorder={handleReorder}
+                        onQuickLog={handleQuickLog}
                         loading={itemsLoading}
                         userId={user?.id}
                     />

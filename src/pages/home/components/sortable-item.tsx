@@ -15,7 +15,7 @@ import {
     Box,
     Typography,
 } from "@mui/material";
-import { Edit as EditIcon, Delete as DeleteIcon, MoreVert } from "@mui/icons-material";
+import { Edit as EditIcon, Delete as DeleteIcon, MoreVert, Add } from "@mui/icons-material";
 import { useState, useCallback } from "react";
 import { useTheme, useMediaQuery } from "@mui/material";
 import { useSortable } from "@dnd-kit/sortable";
@@ -24,7 +24,14 @@ import { formatGoal } from "../../../shared/utils/format-goal.js";
 import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
 import type { SortableItemProps } from "./types.js";
 
-export const SortableItem = ({ item, onEdit, onDelete, onClick, stats }: SortableItemProps) => {
+export const SortableItem = ({
+    item,
+    onEdit,
+    onDelete,
+    onClick,
+    onQuickLog,
+    stats,
+}: SortableItemProps) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -83,14 +90,31 @@ export const SortableItem = ({ item, onEdit, onDelete, onClick, stats }: Sortabl
                 style={style}
                 disablePadding
                 secondaryAction={
-                    <IconButton
-                        edge="end"
-                        onClick={(e) => {
-                            getOpenMenu(item.id)(e);
-                        }}
-                    >
-                        <MoreVert />
-                    </IconButton>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                        {onQuickLog && (
+                            <IconButton
+                                size="small"
+                                onClick={async (e) => {
+                                    e.stopPropagation();
+                                    await onQuickLog(item.id);
+                                }}
+                                sx={{
+                                    color: "primary.main",
+                                    transition: "color 0.2s",
+                                }}
+                            >
+                                <Add />
+                            </IconButton>
+                        )}
+                        <IconButton
+                            edge="end"
+                            onClick={(e) => {
+                                getOpenMenu(item.id)(e);
+                            }}
+                        >
+                            <MoreVert />
+                        </IconButton>
+                    </Box>
                 }
                 {...attributes}
                 {...listeners}

@@ -23,7 +23,7 @@ import type { PageItemsListProps } from "./types.js";
 import { useItemsStats } from "../../../shared/api/firebase/items-stats.js";
 
 export const PageItemsList = (props: PageItemsListProps) => {
-    const { items, onEdit, onDelete, onReorder, loading = false, userId } = props;
+    const { items, onEdit, onDelete, onReorder, onQuickLog, loading = false, userId } = props;
     const navigate = useNavigate();
 
     const itemIds = useMemo(() => items.map((item: Item) => item.id), [items]);
@@ -83,6 +83,7 @@ export const PageItemsList = (props: PageItemsListProps) => {
                                 onEdit={onEdit}
                                 onDelete={onDelete}
                                 onClick={() => navigate(`/item/${item.id}`)}
+                                onQuickLog={onQuickLog}
                                 stats={stats[item.id]}
                             />
                         ))}

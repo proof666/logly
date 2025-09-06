@@ -117,6 +117,17 @@ export function useLogs(
     return { logs, loading, addQuickLog, addDetailedLog, updateLog, removeLog };
 }
 
+export async function addQuickLogForItem(userId: UserId, itemId: ItemId) {
+    await addDoc(logsCol(userId, itemId), {
+        userId,
+        itemId,
+        actionDate: Timestamp.fromMillis(Date.now()),
+        comment: null,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+    });
+}
+
 export function aggregateLogsByDay(
     logs: LogRecord[],
 ): Array<{ date: string; count: number; label: string }> {
