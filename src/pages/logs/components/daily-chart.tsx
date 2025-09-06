@@ -3,7 +3,7 @@ import { useTheme } from "@mui/material/styles";
 import { BarChart, ChartsReferenceLine } from "@mui/x-charts";
 
 type Props = {
-    data: Array<{ date: string; count: number }>;
+    data: Array<{ date: string; count: number; label: string }>;
     goalLine?: number;
 };
 
@@ -17,7 +17,7 @@ export function DailyChart({ data, goalLine }: Props) {
                     xAxis={[
                         {
                             scaleType: "band",
-                            dataKey: "date",
+                            dataKey: "label",
                             tickLabelStyle: { fontSize: 12 },
                         },
                     ]}

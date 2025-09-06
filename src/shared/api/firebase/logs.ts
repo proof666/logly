@@ -15,6 +15,11 @@ import {
 } from "firebase/firestore";
 import type { QueryConstraint, DocumentData, PartialWithFieldValue } from "firebase/firestore";
 import { ItemId, LogId, LogRecord, UserId } from "../../types";
+import dayjs from "dayjs";
+import isoWeek from "dayjs/plugin/isoWeek";
+
+// Extend dayjs with isoWeek plugin
+dayjs.extend(isoWeek);
 
 const logsCol = (userId: UserId, itemId: ItemId) =>
     collection(db, "users", userId, "items", itemId, "logs");
@@ -112,7 +117,9 @@ export function useLogs(
     return { logs, loading, addQuickLog, addDetailedLog, updateLog, removeLog };
 }
 
-export function aggregateLogsByDay(logs: LogRecord[]): Array<{ date: string; count: number }> {
+export function aggregateLogsByDay(
+    logs: LogRecord[],
+): Array<{ date: string; count: number; label: string }> {
     const formatter = new Intl.DateTimeFormat("ru-RU", {
         year: "numeric",
         month: "2-digit",
@@ -129,6 +136,7 @@ export function aggregateLogsByDay(logs: LogRecord[]): Array<{ date: string; cou
         .map(([timestamp, count]) => ({
             date: formatter.format(new Date(timestamp)),
             count,
+            label: formatter.format(new Date(timestamp)), // For days, label is the same as date
         }));
 }
 
@@ -139,7 +147,7 @@ function pad(n: number) {
 export function aggregateLogsByUnit(
     logs: LogRecord[],
     unit: "day" | "week" | "month",
-): Array<{ date: string; count: number }> {
+): Array<{ date: string; count: number; label: string }> {
     if (unit === "day") return aggregateLogsByDay(logs);
 
     const map = new Map<string, number>();
@@ -164,5 +172,25 @@ export function aggregateLogsByUnit(
     }
     return Array.from(map.entries())
         .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([date, count]) => ({ date, count }));
+        .map(([date, count]) => {
+            let label = date;
+            if (unit === "week") {
+                // Extract week number from date (YYYY-MM-DD format)
+                const parts = date.split("-");
+                const year = parseInt(parts[0]!);
+                const month = parseInt(parts[1]!) - 1;
+                const day = parseInt(parts[2]!);
+                const weekDate = new Date(year, month, day);
+                const weekNum = dayjs(weekDate).isoWeek();
+                label = `W${weekNum}`;
+            } else if (unit === "month") {
+                // Extract month name from date (YYYY-MM format)
+                const parts = date.split("-");
+                const year = parseInt(parts[0]!);
+                const month = parseInt(parts[1]!) - 1;
+                const monthDate = new Date(year, month, 1);
+                label = monthDate.toLocaleDateString("en-US", { month: "short" });
+            }
+            return { date, count, label };
+        });
 }
