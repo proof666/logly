@@ -13,7 +13,7 @@ import {
     Divider,
 } from "@mui/material";
 import { MoreVert, Edit as EditIcon, Delete as DeleteIcon } from "@mui/icons-material";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import type { LogRecord } from "../../../shared/types";
 
 type Props = {
@@ -52,9 +52,8 @@ export function LogsList({ logs, onEdit, onDelete }: Props) {
             <CardContent>
                 <List>
                     {logs.map((log, index) => (
-                        <>
+                        <Fragment key={log.id}>
                             <ListItem
-                                key={log.id}
                                 divider={index < logs.length - 1}
                                 secondaryAction={
                                     <IconButton
@@ -77,7 +76,7 @@ export function LogsList({ logs, onEdit, onDelete }: Props) {
                                 />
                             </ListItem>
                             <Divider />
-                        </>
+                        </Fragment>
                     ))}
                 </List>
                 <Menu
