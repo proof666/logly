@@ -12,16 +12,20 @@ import {
     ListItemText,
     Menu,
     MenuItem,
+    Box,
+    Typography,
 } from "@mui/material";
 import { Edit as EditIcon, Delete as DeleteIcon, MoreVert } from "@mui/icons-material";
 import { useState, useCallback } from "react";
-import { Typography } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { formatGoal } from "../../../shared/utils/format-goal.js";
+import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
 import type { SortableItemProps } from "./types.js";
 
-export const SortableItem = ({ item, onEdit, onDelete, onClick }: SortableItemProps) => {
+export const SortableItem = ({ item, onEdit, onDelete, onClick, stats }: SortableItemProps) => {
+    const theme = useTheme();
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: item.id,
     });
@@ -112,6 +116,28 @@ export const SortableItem = ({ item, onEdit, onDelete, onClick }: SortableItemPr
                             </>
                         }
                     />
+                    {stats && stats.length > 0 && (
+                        <Box sx={{ ml: 2, display: "flex", alignItems: "center", gap: 1, mr: 4 }}>
+                            <Typography
+                                variant="body1"
+                                color="primary.main"
+                                sx={{ minWidth: 24, textAlign: "right", fontWeight: 600 }}
+                            >
+                                {stats.reduce((sum, count) => sum + count, 0)}
+                            </Typography>
+                            <Box sx={{ minWidth: 80 }}>
+                                <SparkLineChart
+                                    data={stats}
+                                    height={30}
+                                    curve="natural"
+                                    color={theme.palette.primary.main}
+                                    showTooltip={false}
+                                    showHighlight={false}
+                                    disableClipping
+                                />
+                            </Box>
+                        </Box>
+                    )}
                 </ListItemButton>
             </ListItem>
 

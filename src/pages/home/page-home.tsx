@@ -131,6 +131,7 @@ export const PageHome = () => {
                         onDelete={handleDelete}
                         onReorder={handleReorder}
                         loading={itemsLoading}
+                        userId={user?.id}
                     />
                 )}
             </Stack>

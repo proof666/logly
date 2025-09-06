@@ -1,5 +1,5 @@
 import { List, Typography } from "@mui/material";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Item } from "../../../shared/types/index.js";
 import {
@@ -19,10 +19,14 @@ import {
 } from "@dnd-kit/sortable";
 import { SortableItem } from "./sortable-item.js";
 import type { PageItemsListProps } from "./types.js";
+import { useItemsStats } from "../../../shared/api/firebase/items-stats.js";
 
 export const PageItemsList = (props: PageItemsListProps) => {
-    const { items, onEdit, onDelete, onReorder, loading = false } = props;
+    const { items, onEdit, onDelete, onReorder, loading = false, userId } = props;
     const navigate = useNavigate();
+
+    const itemIds = useMemo(() => items.map((item: Item) => item.id), [items]);
+    const { stats } = useItemsStats(userId || null, itemIds);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -72,6 +76,7 @@ export const PageItemsList = (props: PageItemsListProps) => {
                                 onEdit={onEdit}
                                 onDelete={onDelete}
                                 onClick={() => navigate(`/item/${item.id}`)}
+                                stats={stats[item.id]}
                             />
                         ))}
                     </List>

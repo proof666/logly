@@ -20,4 +20,9 @@ match /users/{userId} {
     }
   }
 }
+
+// Allow collection group queries for logs
+match /{path=**}/logs/{logId} {
+  allow read: if isOwner(resource.data.userId);
+}
 } }
