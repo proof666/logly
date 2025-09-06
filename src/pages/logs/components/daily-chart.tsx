@@ -11,7 +11,7 @@ export function DailyChart({ data, goalLine }: Props) {
     const theme = useTheme();
     return (
         <Card>
-            <CardContent style={{ height: 300 }}>
+            <CardContent style={{ height: 320 }}>
                 <BarChart
                     dataset={data}
                     xAxis={[
