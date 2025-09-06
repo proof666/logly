@@ -118,17 +118,18 @@ export function aggregateLogsByDay(logs: LogRecord[]): Array<{ date: string; cou
         month: "2-digit",
         day: "2-digit",
     });
-    const map = new Map<string, number>();
+    const map = new Map<number, number>();
     for (const l of logs) {
-        const key = formatter.format(l.actionDate);
-        map.set(key, (map.get(key) ?? 0) + 1);
+        const d = new Date(l.actionDate);
+        const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+        map.set(dayStart, (map.get(dayStart) ?? 0) + 1);
     }
     return Array.from(map.entries())
-        .sort((a, b) => {
-            const [da, db] = [a[0], b[0]];
-            return da.localeCompare(db);
-        })
-        .map(([date, count]) => ({ date, count }));
+        .sort((a, b) => a[0] - b[0])
+        .map(([timestamp, count]) => ({
+            date: formatter.format(new Date(timestamp)),
+            count,
+        }));
 }
 
 function pad(n: number) {
