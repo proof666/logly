@@ -150,27 +150,7 @@ export const PageItemLogs = () => {
                 </Stack>
             </Stack>
 
-            <DailyChart
-                data={data}
-                goalLine={
-                    item?.goal
-                        ? unit === item.goal.period
-                            ? item.goal.value
-                            : unit === "day"
-                              ? item.goal.period === "week"
-                                  ? Math.round((item.goal.value / 7) * 100) / 100
-                                  : Math.round((item.goal.value / 30) * 100) / 100
-                              : unit === "week"
-                                ? item.goal.period === "day"
-                                    ? Math.round(item.goal.value * 7 * 100) / 100
-                                    : Math.round((item.goal.value / 30) * 7 * 100) / 100
-                                : // unit === 'month'
-                                  item.goal.period === "day"
-                                  ? Math.round(item.goal.value * 30 * 100) / 100
-                                  : Math.round(item.goal.value * (30 / 7) * 100) / 100
-                        : undefined
-                }
-            />
+            <DailyChart data={data} goalLine={item?.goal?.value} />
 
             <LogsList
                 logs={logs}
