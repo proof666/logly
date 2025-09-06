@@ -55,18 +55,19 @@ export const PageItemsList = (props: PageItemsListProps) => {
 
     const handleDeleteClick = useCallback(() => {
         setConfirmOpen(true);
-        closeMenu();
-    }, [closeMenu]);
+    }, []);
 
     const handleConfirmDelete = useCallback(() => {
         if (activeId) onDelete(activeId);
         setConfirmOpen(false);
         setActiveId(null);
-    }, [activeId, onDelete]);
+        closeMenu();
+    }, [activeId, onDelete, closeMenu]);
 
     const handleCancelDelete = useCallback(() => {
         setConfirmOpen(false);
-    }, []);
+        closeMenu();
+    }, [closeMenu]);
 
     return (
         <>
