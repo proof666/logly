@@ -7,6 +7,7 @@ import {
     closestCenter,
     KeyboardSensor,
     PointerSensor,
+    TouchSensor,
     useSensor,
     useSensors,
     DragEndEvent,
@@ -33,6 +34,12 @@ export const PageItemsList = (props: PageItemsListProps) => {
             activationConstraint: {
                 delay: 500, // Long press for 500ms
                 tolerance: 5,
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 250, // Shorter delay for better UX
+                tolerance: 8, // Slightly higher tolerance
             },
         }),
         useSensor(KeyboardSensor, {

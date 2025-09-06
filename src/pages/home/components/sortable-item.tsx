@@ -94,6 +94,25 @@ export const SortableItem = ({ item, onEdit, onDelete, onClick, stats }: Sortabl
                 }
                 {...attributes}
                 {...listeners}
+                onTouchStart={
+                    isMobile
+                        ? (e) => {
+                              // Prevent page scroll when starting drag on mobile
+                              e.preventDefault();
+                          }
+                        : undefined
+                }
+                sx={{
+                    ...(!isMobile && {
+                        cursor: "grab",
+                        "&:active": {
+                            cursor: "grabbing",
+                        },
+                    }),
+                    ...(isMobile && {
+                        touchAction: "none", // Prevent page scroll on mobile
+                    }),
+                }}
             >
                 <ListItemButton onClick={onClick}>
                     <ListItemText
