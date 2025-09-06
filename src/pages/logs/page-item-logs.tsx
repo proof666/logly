@@ -83,7 +83,10 @@ export const PageItemLogs = () => {
                         variant="contained"
                         startIcon={<Add />}
                         onClick={() => setDesktopDialogOpen(true)}
-                        sx={{ flex: { xs: 1, md: "initial" } }}
+                        sx={{
+                            flex: { xs: 1, md: "initial" },
+                            display: { xs: "none", sm: "inline-flex" },
+                        }}
                     >
                         Log
                     </Button>
